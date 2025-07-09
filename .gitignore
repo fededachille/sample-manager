@@ -1,0 +1,28 @@
+# === Node.js ===
+node_modules/
+/server/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === Build e cache ===
+build/
+dist/
+coverage/
+.pnp
+.pnp.js
+
+# === OS/IDE ===
+.DS_Store
+.vscode/
+
+# === React .env files ===
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === Server: ignore all uploaded images except the placeholder image ===
+server/images/*
+!server/images/_missing_image.png

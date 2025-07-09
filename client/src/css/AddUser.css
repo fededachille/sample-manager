@@ -1,0 +1,126 @@
+.add-user-container {
+  width: 90vw;
+  max-width: 360px;
+  min-width: 220px;
+  max-height: calc(100vh - 8vw - 1rem);
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 2rem;
+  border-radius: 25px;
+  box-shadow: 0 25px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(50px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  scrollbar-width: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+}
+
+.add-user-container::-webkit-scrollbar {
+  display: none;
+}
+
+.add-user-container h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.add-user-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-user-input,
+.permissions-select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.add-user-input:hover,
+.permissions-select:hover {
+  transform: translateY(-2px);
+}
+
+.permissions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.permissions-label {
+  font-weight: bold;
+  text-align: center;
+}
+
+.add-user-button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-user-button:hover {
+  background-color: #555;
+  transform: translateY(-2px);
+}
+
+.success-message {
+  margin-top: 1rem;
+  text-align: center;
+  color: green;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+  .add-user-outer-wrapper {
+    padding-top: 1vw;
+    padding-bottom: 3vw;
+  }
+
+  .add-user-container {
+    max-width: 98vw;
+    min-width: 0;
+    padding: 1.2rem;
+    border-radius: 18px;
+    max-height: calc(100vh - 4vw - 0.5rem);
+  }
+
+  .add-user-container h2 {
+    font-size: 1.1rem;
+  }
+
+  .add-user-input,
+  .permissions-select {
+    font-size: 1em;
+    padding: 0.5rem;
+  }
+
+  body {
+    overflow: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .add-user-container {
+    padding: 0.5rem;
+    border-radius: 10px;
+  }
+
+  .add-user-container h2 {
+    font-size: 1rem;
+  }
+}

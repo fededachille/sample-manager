@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+  font-family: "Rubik", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-optical-sizing: auto;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0e0e0e;
+}
+
+html {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.outer-wrapper {
+  min-height: calc(100vh - 4rem);
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.outer-wrapper>* {
+  pointer-events: auto;
+}
+
+.results-separator {
+  margin: 3rem auto;
+  width: 95%;
+  grid-column: 1 / -1;
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+
+.gradient-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -10;
+  pointer-events: none;
+}
+
+.gradient {
+  position: fixed;
+  border-radius: 50%;
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  filter: blur(120px);
+  transform: translate(-50%, -50%);
+}
+
+.gradient-1 {
+  background: radial-gradient(circle, rgba(255, 0, 255, 0.9) 20%, rgba(255, 0, 255, 0.5) 50%, transparent 100%);
+  width: 1000px;
+  height: 1000px;
+  left: 42%;
+  top: 35%;
+  z-index: -2;
+}
+
+.gradient-2 {
+  background: radial-gradient(circle, rgba(255, 0, 255, 0.9) 20%, rgba(255, 0, 255, 0.5) 50%, transparent 100%);
+  width: 900px;
+  height: 900px;
+  left: 58%;
+  top: 65%;
+  z-index: -1;
+}
+
+.gradient-3 {
+  background: radial-gradient(circle, rgba(0, 204, 255, 0.9) 80%, rgba(0, 204, 255, 0.5) 50%, transparent 100%);
+  width: 950px;
+  height: 950px;
+  left: 50%;
+  top: 50%;
+  z-index: -3;
+}
+
+/* Aggiunta di una sottile texture di sfondo */
+.gradient-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 25% 25%, rgba(120, 120, 120, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(80, 80, 80, 0.02) 0%, transparent 50%);
+  z-index: -1;
+}
+
+.server-offline {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.8rem;
+  text-align: center;
+  padding: 1rem;
+  position: relative
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+  body {
+    overflow-x: auto;
+  }
+
+  .gradient-1 {
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    width: 600px;
+    height: 600px;
+    left: 40%;
+    top: 30%;
+    filter: blur(80px);
+  }
+
+  .gradient-2 {
+    background: radial-gradient(circle, rgba(255, 0, 255, 0.75) 0%, rgba(255, 0, 255, 0.25) 50%, transparent 100%);
+    width: 500px;
+    height: 500px;
+    left: 60%;
+    top: 70%;
+    filter: blur(80px);
+  }
+
+  .gradient-3 {
+    background: radial-gradient(circle, rgba(0, 204, 255, 0.7) 0%, rgba(0, 204, 255, 0.2) 50%, transparent 100%);
+    width: 550px;
+    height: 550px;
+    left: 50%;
+    top: 50%;
+    filter: blur(80px);
+  }
+}

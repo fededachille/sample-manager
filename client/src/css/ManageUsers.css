@@ -1,0 +1,103 @@
+.manage-users-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(50px);
+    padding: 2rem;
+    border-radius: 25px;
+    box-shadow: 0 25px 25px rgba(0, 0, 0, 0.4);
+
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.user-table {
+    width: 100%;
+    margin-top: 1.5rem;
+    border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+.user-action-button {
+    padding: 0.6rem 1.2rem;
+    margin: 0.5rem auto;
+    font-size: 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-action-button:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+
+.role-select {
+    transition: all 0.3s ease;
+}
+
+.role-select:hover {
+    transform: translateY(-2px);
+}
+
+.name-p {
+    transition: all 0.3s ease;
+}
+
+.name-p:hover {
+    transform: translateY(-2px);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+    .manage-users-container {
+        width: 95vw;
+        max-width: 98vw;
+        padding: 1.2rem;
+        border-radius: 18px;
+        top: 55%;
+        transform: translate(-50%, -55%);
+    }
+
+    .user-table th,
+    .user-table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .user-action-button {
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .manage-users-container {
+        padding: 0.7rem;
+        border-radius: 12px;
+    }
+
+    .user-table th,
+    .user-table td {
+        padding: 0.35rem;
+        font-size: 0.85rem;
+    }
+
+    .user-action-button {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
