@@ -1,4 +1,7 @@
 // Setup script to create database, insert initial shelves and the first admin user into the system.
+
+require('dotenv').config({ path: '../.env' }); // Load environment variables from .env file
+
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2');
@@ -6,15 +9,15 @@ const bcrypt = require('bcrypt');
 
 // Database configuration
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   multipleStatements: true
 };
 
 const dbConfigWithDatabase = {
   ...dbConfig,
-  database: 'sample_manager_db'
+  database: process.env.DB_NAME
 };
 
 const scaffali = [

@@ -50,20 +50,19 @@ Verrà creato un primo utente con nome = "admin", password = "admin" e autorizza
 
 Assegnare i valori appropriati alle variabili, lasciando però inalterato il campo DB_NAME.
 
-DB_HOST= ip_host<br>
-DB_USER= mysql_username<br>
-DB_PASSWORD= mysql_password<br>
-DB_NAME= sample_manager_db<br>
-SESSION_SECRET= stringa_segreta_per_sessioni
+DB_HOST=ip_host<br>
+DB_USER=mysql_username<br>
+DB_PASSWORD=mysql_password<br>
+DB_NAME=sample_manager_db<br>
+SESSION_SECRET=stringa_segreta_per_sessioni
 
 ### 4. Installare le dipendenze
 
+Eseguire il comando:
 ```bash
-cd server
-npm install
-cd ../client
 npm install
 ```
+sia in /server che in /client.
 
 ### 5. Avviare il server e il client
 
