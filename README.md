@@ -50,10 +50,10 @@ Verrà creato un primo utente con nome = "admin", password = "admin" e autorizza
 
 Assegnare i valori appropriati alle variabili, lasciando però inalterato il campo DB_NAME.
 
-DB_HOST= ip_host
-DB_USER= mysql_username
-DB_PASSWORD= mysql_password
-DB_NAME= sample_manager_db
+DB_HOST= ip_host<br>
+DB_USER= mysql_username<br>
+DB_PASSWORD= mysql_password<br>
+DB_NAME= sample_manager_db<br>
 SESSION_SECRET= stringa_segreta_per_sessioni
 
 ### 4. Installare le dipendenze
