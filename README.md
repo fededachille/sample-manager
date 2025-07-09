@@ -92,5 +92,5 @@ L'app sarà disponibile su `http://localhost:3000`.
 
 ## Autore
 
-Federico Dachille
+Federico Dachille<br>
 Corso di Tecnologie Internet - Ingegneria delle Tecnologie Informatiche - Università di Parma
