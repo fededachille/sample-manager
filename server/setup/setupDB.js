@@ -27,7 +27,7 @@ const scaffali = [
   { id: 'S4', sezioni: 8, ripiani: 4 }
 ];
 
-let db;
+let db = null;
 
 // Create database and tables from SQL file
 function setupDatabase(callback) {

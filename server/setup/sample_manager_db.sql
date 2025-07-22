@@ -1,36 +1,31 @@
--- Create database
 CREATE DATABASE IF NOT EXISTS sample_manager_db;
 USE sample_manager_db;
 
--- Samples table
 CREATE TABLE IF NOT EXISTS campioni (
     codice VARCHAR(30) PRIMARY KEY,
     descrizione TEXT,
-    immagine TEXT
+    immagine VARCHAR(255)
 );
 
--- Shelves table
 CREATE TABLE IF NOT EXISTS scaffali (
     id_scaffale VARCHAR(10) PRIMARY KEY,
     numero_sezioni INT NOT NULL,
     numero_ripiani INT NOT NULL
 );
 
--- SampleSizes table
 CREATE TABLE IF NOT EXISTS taglie_campione (
     id_taglia INT AUTO_INCREMENT PRIMARY KEY,
-    codice_campione VARCHAR(20),
-    numero_box VARCHAR(20),
-    taglia VARCHAR(10),
-    quantità INT,
-    id_scaffale VARCHAR(10),
-    sezione VARCHAR(10),
-    ripiano INT,
-    FOREIGN KEY (codice_campione) REFERENCES campioni(codice) ON UPDATE CASCADE,
+    codice_campione VARCHAR(20) NOT NULL,
+    numero_box VARCHAR(20) NOT NULL,
+    taglia VARCHAR(10) NOT NULL,
+    quantità INT NOT NULL,
+    id_scaffale VARCHAR(10) NOT NULL,
+    sezione VARCHAR(10) NOT NULL,
+    ripiano INT NOT NULL,
+    FOREIGN KEY (codice_campione) REFERENCES campioni(codice) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (id_scaffale) REFERENCES scaffali(id_scaffale)
 );
 
--- Users table
 CREATE TABLE IF NOT EXISTS utenti (
     id_utente INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL UNIQUE,
@@ -38,21 +33,21 @@ CREATE TABLE IF NOT EXISTS utenti (
     autorizzazioni VARCHAR(10) NOT NULL
 );
 
--- Shippings table
 CREATE TABLE IF NOT EXISTS spedizioni (
     id_spedizione INT AUTO_INCREMENT PRIMARY KEY,
-    nome_utente VARCHAR(50), 
-    destinatario VARCHAR(50), 
+    id_utente INT DEFAULT NULL,
+    nome_utente VARCHAR(50) NOT NULL, 
+    destinatario VARCHAR(50) NOT NULL, 
     data DATETIME,
-    nome_corriere VARCHAR(50)
+    nome_corriere VARCHAR(50),
+    FOREIGN KEY (id_utente) REFERENCES utenti(id_utente) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
--- ShippingsDetail table
 CREATE TABLE IF NOT EXISTS dettaglio_spedizioni (
     id_dettaglio INT AUTO_INCREMENT PRIMARY KEY,
-    id_spedizione INT,
-    codice_campione VARCHAR(20),
-    taglia VARCHAR(10),
-    quantità INT,
-    FOREIGN KEY (id_spedizione) REFERENCES spedizioni(id_spedizione)
+    id_spedizione INT NOT NULL,
+    codice_campione VARCHAR(20) NOT NULL,
+    taglia VARCHAR(10) NOT NULL,
+    quantità INT NOT NULL,
+    FOREIGN KEY (id_spedizione) REFERENCES spedizioni(id_spedizione) ON DELETE CASCADE
 );

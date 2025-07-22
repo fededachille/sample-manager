@@ -15,8 +15,8 @@ module.exports = (io) => {
         const db = getDb();
 
         const query = `
-      SELECT s.id_spedizione, s.destinatario, s.data, s.nome_corriere, s.nome_utente,
-             d.codice_campione, d.taglia, d.quantità
+      SELECT s.id_spedizione, s.id_utente, s.destinatario, s.data, s.nome_corriere, s.nome_utente,
+       d.codice_campione, d.taglia, d.quantità
       FROM spedizioni s
       LEFT JOIN dettaglio_spedizioni d ON s.id_spedizione = d.id_spedizione
       ORDER BY s.data DESC, s.id_spedizione DESC
@@ -33,6 +33,7 @@ module.exports = (io) => {
                 if (!spedizioni[row.id_spedizione]) {
                     spedizioni[row.id_spedizione] = {
                         id: row.id_spedizione,
+                        id_utente: row.id_utente,
                         destinatario: row.destinatario,
                         data: row.data,
                         corriere: row.nome_corriere,
@@ -44,7 +45,7 @@ module.exports = (io) => {
                     spedizioni[row.id_spedizione].dettagli.push({
                         codice: row.codice_campione,
                         taglia: row.taglia,
-                        quantita: row.quantità
+                        quantità: row.quantità
                     });
                 }
             });
@@ -59,8 +60,9 @@ module.exports = (io) => {
         const db = getDb();
         const { destinatario, nome_corriere, dettaglio } = req.body;
         const nome_utente = req.session.user?.nome;
+        const id_utente = req.session.user?.id;
 
-        if (!nome_utente || !destinatario || !nome_corriere || !Array.isArray(dettaglio)) {
+        if (!id_utente || !nome_utente || !destinatario || !nome_corriere || !Array.isArray(dettaglio)) {
             return res.status(400).json({ message: 'Dati mancanti o non validi.' });
         }
 
@@ -68,10 +70,9 @@ module.exports = (io) => {
         const offsetDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
         const data = offsetDate.toISOString().slice(0, 19).replace('T', ' ');
 
-
         db.query(
-            'INSERT INTO spedizioni (nome_utente, destinatario, data, nome_corriere) VALUES (?, ?, ?, ?)',
-            [nome_utente, destinatario, data, nome_corriere],
+            'INSERT INTO spedizioni (id_utente, nome_utente, destinatario, data, nome_corriere) VALUES (?, ?, ?, ?, ?)',
+            [id_utente, nome_utente, destinatario, data, nome_corriere],
             (err, result) => {
                 if (err) {
                     console.error('Errore inserimento spedizione:', err);
@@ -121,6 +122,7 @@ module.exports = (io) => {
 
                                         const nuovaSpedizione = {
                                             id: id_spedizione,
+                                            id_utente: id_utente,
                                             destinatario,
                                             data,
                                             corriere: nome_corriere,
@@ -128,7 +130,7 @@ module.exports = (io) => {
                                             dettagli: dettaglio.map(d => ({
                                                 codice: d.codice_campione,
                                                 taglia: d.taglia,
-                                                quantita: d.quantità
+                                                quantità: d.quantità
                                             }))
                                         };
 

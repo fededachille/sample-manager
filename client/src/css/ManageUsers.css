@@ -63,41 +63,43 @@
 
 /* --- RESPONSIVE --- */
 @media (max-width: 600px) {
-    .manage-users-container {
-        width: 95vw;
-        max-width: 98vw;
-        padding: 1.2rem;
-        border-radius: 18px;
-        top: 55%;
-        transform: translate(-50%, -55%);
+    .manage-users-wrapper {
+        padding: 1rem;
+        max-width: 95vw;
+        overflow-x: auto;
     }
 
-    .user-table th,
-    .user-table td {
-        padding: 0.5rem;
-        font-size: 0.9rem;
+    .manage-users-wrapper h2 {
+        font-size: 1.3rem;
+        text-align: center;
     }
 
-    .user-action-button {
-        font-size: 0.95rem;
-        padding: 0.5rem 1rem;
+    .users-table {
+        font-size: 14px;
+        min-width: 600px;
+    }
+
+    .users-table th,
+    .users-table td {
+        padding: 8px;
+    }
+
+    .action-button {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .add-user-link {
+        font-size: 14px;
     }
 }
 
 @media (max-width: 400px) {
-    .manage-users-container {
-        padding: 0.7rem;
-        border-radius: 12px;
+    .manage-users-wrapper {
+        padding: 0.5rem;
     }
 
-    .user-table th,
-    .user-table td {
-        padding: 0.35rem;
-        font-size: 0.85rem;
-    }
-
-    .user-action-button {
-        font-size: 0.85rem;
-        padding: 0.4rem 0.8rem;
+    .users-table {
+        font-size: 13px;
     }
 }

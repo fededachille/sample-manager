@@ -66,47 +66,44 @@
 
 /* --- RESPONSIVE --- */
 @media (max-width: 600px) {
-  .user-info-container {
-    width: 95vw;
-    max-width: 98vw;
-    padding: 1.2rem;
-    border-radius: 18px;
-    top: 55%;
-    transform: translate(-50%, -55%);
+  .user-info-wrapper {
+    padding: 1rem;
+    max-width: 95vw;
+    border-radius: 16px;
   }
 
-  .user-info-input {
-    font-size: 0.95rem;
-    padding: 0.45rem;
+  .user-info-wrapper h2 {
+    font-size: 1.3rem;
+    text-align: center;
   }
 
-  .user-info-button {
-    font-size: 0.95rem;
-    padding: 0.5rem 1rem;
+  .user-info-form {
+    gap: 15px;
   }
 
-  .user-info-message {
-    font-size: 0.95rem;
+  .user-info-form input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .user-info-form button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .password-section {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
 @media (max-width: 400px) {
-  .user-info-container {
-    padding: 0.7rem;
-    border-radius: 12px;
+  .user-info-wrapper {
+    padding: 0.5rem;
+    border-radius: 10px;
   }
 
-  .user-info-input {
-    font-size: 0.9rem;
-    padding: 0.4rem;
-  }
-
-  .user-info-button {
-    font-size: 0.85rem;
-    padding: 0.4rem 0.8rem;
-  }
-
-  .user-info-message {
-    font-size: 0.85rem;
+  .user-info-wrapper h2 {
+    font-size: 1.1rem;
   }
 }

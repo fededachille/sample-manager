@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './css/AddSample.css';
 
 /**
@@ -9,6 +9,19 @@ import './css/AddSample.css';
  */
 
 function AddSample() {
+  // If not authenticated, redirect the user to the login page.
+  useEffect(() => {
+    fetch('/api/check-session', { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) {
+          window.location.href = '/';
+        }
+      })
+      .catch(() => {
+        window.location.href = '/';
+      });
+  }, []);
+
   // Form state for codice, descrizione, and image file
   const [form, setForm] = useState({
     codice: '',

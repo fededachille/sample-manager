@@ -12,12 +12,27 @@ import './css/ManageUsers.css';
  */
 
 function ManageUsers() {
+
+    const navigate = useNavigate(); // Navigate between routes
+
+    /* Check current session and redirect if not admin */
+    useEffect(() => {
+        fetch('/api/check-session', { credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.loggedIn || data.user.autorizzazioni !== 'admin') {
+                    navigate('/');
+                } else {
+                    setUserLoggedIn(data.user);
+                }
+            });
+    }, [navigate]);
+
     const [users, setUsers] = useState([]); // List of users (excluding self)
     const [userLoggedIn, setUserLoggedIn] = useState(null); // Logged-in user info
     const [message, setMessage] = useState(null); // Action feedback
     const [editedRoles, setEditedRoles] = useState({}); // Temporary role edits
     const [loading, setLoading] = useState(true); // Loading state
-    const navigate = useNavigate();
 
     // Role selection options
     const roleOptions = [
@@ -38,19 +53,6 @@ function ManageUsers() {
             })
             .finally(() => setLoading(false));
     }, [userLoggedIn]);
-
-    /* Check current session and redirect if not admin */
-    useEffect(() => {
-        fetch('/api/check-session', { credentials: 'include' })
-            .then(res => res.json())
-            .then(data => {
-                if (!data.loggedIn || data.user.autorizzazioni !== 'admin') {
-                    navigate('/');
-                } else {
-                    setUserLoggedIn(data.user);
-                }
-            });
-    }, [navigate]);
 
     /* Load users once admin session is confirmed */
     useEffect(() => {
@@ -80,10 +82,19 @@ function ManageUsers() {
             );
         });
 
+        socket.on('user-renamed', ({ id, nuovoNome }) => {
+            setUsers(prev =>
+                prev.map(u =>
+                    u.id === id ? { ...u, nome: nuovoNome } : u
+                )
+            );
+        });
+
         return () => {
             socket.off('user-added');
             socket.off('user-deleted');
             socket.off('role-updated');
+            socket.off('user-renamed');
         };
     }, [userLoggedIn]);
 

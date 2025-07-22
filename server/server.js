@@ -15,7 +15,6 @@ const session = require('express-session'); // Session middleware for user login
 
 // MySQL database connection
 const db = require('./db');
-const getDb = require('./db');
 
 const bcrypt = require('bcrypt'); // Password hashing utility
 const multer = require('multer'); // Middleware for handling multipart/form-data (file uploads)
@@ -32,11 +31,13 @@ const server = http.createServer(app); // Create HTTP server for Express app
 // Initialize Socket.IO server with CORS for frontend at localhost:3000
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: [process.env.CLIENT_ORIGIN, "http://localhost:3000"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }
 });
+
+global.io = io;
 
 const userSockets = new Map(); // Maps user IDs to their corresponding socket connections
 
@@ -106,6 +107,6 @@ app.use('/api', userRoutes);
 app.use('/api', shelfRoutes);
 
 // Start the backend server on port 5000
-server.listen(5000, () => {
+server.listen(5000, '0.0.0.0', () => {
   console.log("Server started on port 5000.");
 });

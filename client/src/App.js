@@ -24,6 +24,8 @@ function App() {
   const [user, setUser] = useState(null); // Logged-in user info
   const [loading, setLoading] = useState(true); // Initial loading state
   const [serverOffline, setServerOffline] = useState(false); // Server unreachable
+  const [dbConnected, setDbConnected] = useState(true); // DB connection
+
 
   // Check if user is logged in on first render
   useEffect(() => {
@@ -83,6 +85,17 @@ function App() {
     }
   }, [user]);
 
+  // Listen for database connection status updates from the backend
+  useEffect(() => {
+    socket.on('db-status', (data) => {
+      setDbConnected(data.connected);
+    });
+
+    return () => {
+      socket.off('db-status');
+    };
+  }, []);
+
   // Callback after successful login
   const handleLoginSuccess = (userData) => {
     setUser(userData);
@@ -108,23 +121,34 @@ function App() {
         <div className="gradient gradient-3"></div>
       </div>
 
+      {!dbConnected && (
+        <div className="db-overlay">
+          <div className="db-overlay-content">
+            <div className="spinner"></div>
+            <p>Connessione al database persa. Attendere il ripristino...</p>
+          </div>
+        </div>
+      )}
+
+
       {/* Show loading or offline message */}
       {loading ? (
         <p>Caricamento...</p>
       ) : serverOffline ? (
-        <div className="server-offline">
-          Impossibile connettersi al server. <br /> Controlla la connessione o riprova più tardi.
+        <div className="db-overlay">
+          <div className="db-overlay-content">
+            <div className="spinner"></div>
+            <p>Connessione al server persa. Attendere il ripristino...</p>
+          </div>
         </div>
       ) : (
         <Router>
-          {/* If not logged in, show only the Login page */}
           {!user ? (
             <Routes>
               <Route path="*" element={<Login onLoginSuccess={handleLoginSuccess} />} />
             </Routes>
           ) : (
             <>
-              {/* Show navbar and routes if user is logged in */}
               <Navbar user={user} onLogout={handleLogout} />
               <Routes>
                 <Route path="/" element={<Home user={user} />} />
@@ -141,6 +165,7 @@ function App() {
           )}
         </Router>
       )}
+
     </>
   );
 }

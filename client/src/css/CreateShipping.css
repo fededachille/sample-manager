@@ -145,103 +145,50 @@
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 900px) {
-  .create-shipping-form {
-    max-width: 98vw;
-    padding: 1.3rem;
-    border-radius: 18px;
-    max-height: none;
-  }
-
-  .page-container {
-    max-width: 98vw;
-    padding: 1rem;
-    border-radius: 18px;
-    margin-bottom: 5vw;
-  }
-
-  .page-outer-wrapper {
-    gap: 1.5vw;
-  }
-}
-
 @media (max-width: 600px) {
-  body {
-    overflow: auto;
+  .create-shipping-wrapper {
+    padding: 1rem;
+    max-width: 98vw;
+    border-radius: 18px;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
   }
 
-  .page-outer-wrapper {
-    gap: 1vw;
-  }
-
-  .page-container {
-    padding: 0.5rem;
-    border-radius: 12px;
-    margin-bottom: 8vw;
+  .create-shipping-wrapper h2 {
+    font-size: 1.1rem;
+    text-align: center;
   }
 
   .create-shipping-form {
-    padding: 0.8rem;
-    border-radius: 12px;
-    min-width: 0;
-    max-height: calc(100vh - 4vw - 0.5rem);
-  }
-
-  .shipping-form {
-    gap: 0.7rem;
-  }
-
-  .button-group {
+    display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    gap: 15px;
   }
 
-  .create-shipping-form table thead {
-    display: none;
+  .create-shipping-form input,
+  .create-shipping-form select {
+    font-size: 14px;
+    padding: 8px;
   }
 
-  .create-shipping-form table,
-  .create-shipping-form tbody,
-  .create-shipping-form tr,
-  .create-shipping-form td {
-    display: block;
-    width: 100%;
+  .create-shipping-form button {
+    font-size: 14px;
+    padding: 8px 12px;
   }
 
-  .create-shipping-form tr {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 10px;
-  }
-
-  .create-shipping-form td {
-    margin-bottom: 0.7rem;
-  }
-
-  .create-shipping-form td:last-child {
-    text-align: right;
-    margin-bottom: 0;
-  }
-
-  .create-shipping-form table {
-    font-size: 0.93rem;
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
-@media (max-width: 420px) {
-  .page-container {
-    padding: 0.2rem;
-    border-radius: 7px;
-    margin-bottom: 10vw;
+@media (max-width: 400px) {
+  .create-shipping-wrapper {
+    padding: 0.5rem;
+    border-radius: 12px;
   }
 
-  .create-shipping-form {
-    padding: 0.3rem;
-    border-radius: 7px;
-  }
-
-  .create-shipping-form th,
-  .create-shipping-form td {
-    padding: 0.18rem;
+  .create-shipping-wrapper h2 {
+    font-size: 1rem;
   }
 }

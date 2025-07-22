@@ -2,6 +2,7 @@
  * Database connection manager
  * - Establishes a MySQL connection using environment variables
  * - Automatically reconnects on connection loss
+ * - Emits socket events on DB connect/disconnect
  * - Exports a function that returns the active connection
  */
 
@@ -27,10 +28,21 @@ function handleDisconnect(retries = 0) {
   db.connect((err) => {
     if (err) {
       console.error("DB connection error:", err.message);
+
+      // Notify frontend: DB is not connected
+      if (global.io) {
+        global.io.emit('db-status', { connected: false });
+      }
+
       console.log("Retrying in 5 seconds...\n");
       setTimeout(() => handleDisconnect(retries + 1), 5000);
     } else {
       console.log("Connected to MySql DB.");
+
+      // Notify frontend: DB is connected
+      if (global.io) {
+        global.io.emit('db-status', { connected: true });
+      }
     }
   });
 
@@ -40,10 +52,8 @@ function handleDisconnect(retries = 0) {
       handleDisconnect();
     }
   });
-
 }
 
 handleDisconnect(); // Initialize first connection to the database
 
 module.exports = () => db;
-

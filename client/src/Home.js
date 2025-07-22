@@ -11,6 +11,19 @@ import './css/Home.css';
  */
 
 function Home({ user }) {
+
+  useEffect(() => {
+    fetch('/api/check-session', { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) {
+          window.location.href = '/';
+        }
+      })
+      .catch(() => {
+        window.location.href = '/';
+      });
+  }, []);
+
   const [campioni, setCampioni] = useState([]); // List of samples
   const [loading, setLoading] = useState(true); // Initial loading state
   const [searchTerm, setSearchTerm] = useState(''); // Search input state

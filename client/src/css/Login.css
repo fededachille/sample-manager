@@ -93,44 +93,40 @@
 
 /* --- RESPONSIVE --- */
 @media (max-width: 600px) {
-  body {
-    overflow: auto;
+  .login-wrapper {
+    padding: 1rem;
+    max-width: 95vw;
+    border-radius: 16px;
   }
 
   .login-form {
-    max-width: 98vw;
-    min-width: 0;
-    padding: 1.2rem;
-    border-radius: 18px;
+    padding: 1.5rem;
+    gap: 15px;
   }
 
   .login-form h2 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    text-align: center;
   }
 
-  .login-form img {
-    width: 60px;
-    margin-bottom: 0.5rem;
+  .login-form input {
+    font-size: 14px;
+    padding: 10px;
   }
 
-  .login-form input,
   .login-form button {
-    font-size: 1em;
-    padding: 0.5rem;
-  }
-
-  .login-form p {
-    font-size: 15px;
+    font-size: 14px;
+    padding: 10px;
   }
 }
 
 @media (max-width: 400px) {
-  .login-form {
+  .login-wrapper {
     padding: 0.5rem;
     border-radius: 10px;
   }
 
   .login-form h2 {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 }

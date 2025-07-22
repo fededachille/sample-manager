@@ -11,9 +11,6 @@ import './css/AddUser.css';
  */
 
 function AddUser() {
-  const [form, setForm] = useState({ nome: '', autorizzazioni: 'user' }); // Form state for new user creation
-  const [message, setMessage] = useState(''); // Feedback message displayed after form submission
-  const [loading, setLoading] = useState(true); // Loading state while fetching data or validating session
   const navigate = useNavigate(); // Navigate between routes
 
   // Check if the current user is an admin
@@ -29,6 +26,10 @@ function AddUser() {
       })
       .catch(() => navigate('/')); // Handle fetch error by redirecting
   }, [navigate]);
+
+  const [form, setForm] = useState({ nome: '', autorizzazioni: 'user' }); // Form state for new user creation
+  const [message, setMessage] = useState(''); // Feedback message displayed after form submission
+  const [loading, setLoading] = useState(true); // Loading state while fetching data or validating session
 
   // Handle form submission
   const handleSubmit = async (e) => {

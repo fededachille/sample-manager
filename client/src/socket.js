@@ -6,8 +6,24 @@ import { io } from 'socket.io-client';
  * - Sends cookies (for session auth) using `withCredentials: true`
  */
 
-const socket = io('http://localhost:5000', {
-    withCredentials: true
+
+const serverUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
+const socket = io(serverUrl, {
+    credentials: true,
+});
+
+socket.on('connect', () => {
+    console.log('Socket connesso:', socket.id);
+    console.log('URL server:', serverUrl);
+});
+
+socket.on('disconnect', () => {
+    console.log('Socket disconnesso');
+});
+
+socket.on('connect_error', (error) => {
+    console.log('Errore connessione:', error);
 });
 
 export default socket;

@@ -1,5 +1,5 @@
 /**
- * Auth routes
+ * Authentication routes
  * - Handles session check, login and logout
  * - Uses bcrypt for password validation
  * - Stores authenticated user info in session

@@ -14,6 +14,19 @@ import './css/SampleDetails.css';
  */
 
 function SampleDetail() {
+
+  useEffect(() => {
+    fetch('/api/check-session', { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) {
+          window.location.href = '/';
+        }
+      })
+      .catch(() => {
+        window.location.href = '/';
+      });
+  }, []);
+
   const { codice } = useParams(); // Extracts the sample code from the route parameters
   const [campione, setCampione] = useState(null); // State to store sample details
   const [loading, setLoading] = useState(true); // Loading state while data is being fetched

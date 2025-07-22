@@ -66,7 +66,6 @@ module.exports = (io, userSockets) => {
     });
 
     // PUT /user/update-name
-    // Update current user's name
     router.put('/user/update-name', (req, res) => {
         const db = getDb();
         const userId = req.session.user?.id;
@@ -81,14 +80,29 @@ module.exports = (io, userSockets) => {
             [nome, userId],
             (err) => {
                 if (err) {
-                    console.error(err);
+                    console.error('Errore update utenti:', err);
                     return res.status(500).json({ message: 'Errore durante aggiornamento nome.' });
                 }
-                req.session.user.nome = nome;
-                res.json({ message: 'Nome aggiornato con successo.' });
+
+                db.query(
+                    'UPDATE spedizioni SET nome_utente = ? WHERE id_utente = ?',
+                    [nome, userId],
+                    (err2) => {
+                        if (err2) {
+                            console.error('Errore update spedizioni:', err2);
+                            return res.status(500).json({ message: 'Nome utente aggiornato, ma errore nelle spedizioni.' });
+                        }
+
+                        req.session.user.nome = nome;
+
+                        io.emit('user-renamed', { id: userId, nuovoNome: nome });
+                        res.json({ message: 'Nome aggiornato con successo.' });
+                    }
+                );
             }
         );
     });
+
 
     // PUT /user/update-password
     // Update current user's password
@@ -155,7 +169,7 @@ module.exports = (io, userSockets) => {
             return res.status(403).json({ message: 'Accesso negato.' });
         }
 
-        if (!['user', 'super', 'admin'].includes(autorizzazioni)) {
+        if (!['user', 'admin'].includes(autorizzazioni)) {
             return res.status(400).json({ message: 'Ruolo non valido.' });
         }
 

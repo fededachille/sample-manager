@@ -12,6 +12,19 @@ import './css/CreateShipping.css';
  */
 
 function CreateShipping() {
+
+    useEffect(() => {
+        fetch('/api/check-session', { credentials: 'include' })
+            .then(res => {
+                if (!res.ok) {
+                    window.location.href = '/';
+                }
+            })
+            .catch(() => {
+                window.location.href = '/';
+            });
+    }, []);
+
     const [samples, setSamples] = useState([]); // List of all available samples
     const [rows, setRows] = useState([{ codice_campione: '', taglia: '', numero_box: '', quantità: '' }]); // Array of rows representing shipping entries
     const [sizesBySample, setSizesBySample] = useState({}); // Stores sizes grouped by sample code

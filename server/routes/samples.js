@@ -102,23 +102,20 @@ module.exports = (io) => {
             const immagine = results[0].immagine;
             const isCustomImage = immagine && !immagine.includes('_missing_image');
 
-            db.query('DELETE FROM taglie_campione WHERE codice_campione = ?', [codice], (err) => {
-                if (err) return res.status(500).json({ message: 'Errore eliminazione taglia.' });
+            db.query('DELETE FROM campioni WHERE codice = ?', [codice], (err) => {
+                if (err) return res.status(500).json({ message: 'Errore eliminazione campione.' });
 
-                db.query('DELETE FROM campioni WHERE codice = ?', [codice], (err) => {
-                    if (err) return res.status(500).json({ message: 'Errore eliminazione campione.' });
+                if (isCustomImage) {
+                    const pathToDelete = path.join(__dirname, '..', immagine);
+                    fs.unlink(pathToDelete, () => { /* Ignora errori in fs.unlink */ });
+                }
 
-                    if (isCustomImage) {
-                        const pathToDelete = path.join(__dirname, '..', immagine);
-                        fs.unlink(pathToDelete, () => { });
-                    }
-
-                    io.emit('sample-deleted', { codice });
-                    res.json({ message: 'Campione e taglie eliminati.' });
-                });
+                io.emit('sample-deleted', { codice });
+                res.json({ message: 'Campione e relative taglie eliminati.' });
             });
         });
     });
+
 
     // PUT /campioni/:oldCodice/codice
     // Update a sample's codice (primary key)

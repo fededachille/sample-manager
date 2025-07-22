@@ -9,12 +9,7 @@ import './css/UserInfo.css';
  */
 
 function UserInfo() {
-    const [user, setUser] = useState(null); // Current user
-    const [newName, setNewName] = useState(''); // New username input
-    const [oldPassword, setOldPassword] = useState(''); // Old password input
-    const [newPassword, setNewPassword] = useState(''); // New password input
-    const [feedback, setFeedback] = useState(null);  // Feedback message
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Navigate between routes
 
     // Fetch current session and user data on mount
     useEffect(() => {
@@ -29,6 +24,12 @@ function UserInfo() {
                 }
             });
     }, [navigate]);
+
+    const [user, setUser] = useState(null); // Current user
+    const [newName, setNewName] = useState(''); // New username input
+    const [oldPassword, setOldPassword] = useState(''); // Old password input
+    const [newPassword, setNewPassword] = useState(''); // New password input
+    const [feedback, setFeedback] = useState(null);  // Feedback message
 
     // Handle name update request
     const handleNameUpdate = async () => {

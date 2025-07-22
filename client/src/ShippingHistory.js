@@ -11,6 +11,19 @@ import './css/ShippingHistory.css';
  */
 
 function ShippingHistory() {
+
+  useEffect(() => {
+    fetch('/api/check-session', { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) {
+          window.location.href = '/';
+        }
+      })
+      .catch(() => {
+        window.location.href = '/';
+      });
+  }, []);
+
   const [spedizioni, setSpedizioni] = useState([]); // List of shipments
   const [loading, setLoading] = useState(true); // Initial loading state
 
@@ -31,14 +44,23 @@ function ShippingHistory() {
       });
   }, []);
 
-  // Listen for real-time creation of new shipments
+  // Listen for real-time creation of new shipments and username updates
   useEffect(() => {
     socket.on('shipping-created', (nuovaSpedizione) => {
       setSpedizioni(prev => [nuovaSpedizione, ...prev]);
     });
 
+    socket.on('user-renamed', ({ id, nuovoNome }) => {
+      setSpedizioni(prev =>
+        prev.map(sped =>
+          sped.id_utente === id ? { ...sped, utente: nuovoNome } : sped
+        )
+      );
+    });
+
     return () => {
       socket.off('shipping-created');
+      socket.off('user-renamed');
     };
   }, []);
 
@@ -95,7 +117,7 @@ function ShippingHistory() {
               <tr key={i}>
                 <td align='center'>{d.codice}</td>
                 <td align='center'>{d.taglia}</td>
-                <td align='center'>{d.quantita}</td>
+                <td align='center'>{d.quantità}</td>
               </tr>
             ))}
           </tbody>
@@ -174,12 +196,16 @@ function ShippingHistory() {
         </div>
 
         {/* Matching shipments */}
-        {matchingSpedizioni.length > 0 ? (
+        {spedizioni.length === 0 ? (
+          <p style={{ textAlign: 'center' }}>
+            Nessuna spedizione registrata al momento.
+          </p>
+        ) : matchingSpedizioni.length > 0 ? (
           matchingSpedizioni.map(renderSpedizione)
         ) : (
-          (filtroDestinatario || filtroCorriere || filtroUtente || filtroCodice || filtroData) && (
-            <p style={{ textAlign: 'center' }}>Nessuna spedizione trovata con i filtri selezionati.</p>
-          )
+          <p style={{ textAlign: 'center' }}>
+            Nessuna spedizione trovata con i filtri selezionati.
+          </p>
         )}
 
         {/* Show non-matching shipments (below separator) */}
