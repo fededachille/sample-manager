@@ -159,5 +159,23 @@ module.exports = (io) => {
         });
     });
 
+    // GET /sample-sizes/boxes/all
+    // Returns all boxes and their positions
+    router.get('/sample-sizes/boxes/all', (req, res) => {
+        const db = getDb();
+
+        db.query(
+            'SELECT DISTINCT numero_box, taglia, id_scaffale, sezione, ripiano FROM taglie_campione',
+            (err, results) => {
+                if (err) {
+                    console.error('Failed to fetch boxes:', err);
+                    return res.status(500).json({ message: 'Errore durante il recupero delle box.' });
+                }
+
+                res.json(results);
+            }
+        );
+    });
+
     return router;
 };

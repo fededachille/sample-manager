@@ -201,10 +201,21 @@ function CreateShipping() {
     };
 
     // Dynamically computes the available options for each select field
-    const getFilteredOptions = (row, field) => {
+    const getFilteredOptions = (row, field, rowIndex) => {
         const size = sizesBySample[row.codice_campione] || [];
         if (field === 'taglia') {
-            return [...new Set(size.map(s => s.taglia))].map(t => ({ label: t, value: t }));
+            const usedSizes = rows
+                .filter((r, i) =>
+                    i !== rowIndex &&
+                    r.codice_campione === row.codice_campione &&
+                    r.taglia
+                )
+                .map(r => r.taglia);
+
+            const allSizes = [...new Set(size.map(s => s.taglia))];
+            const availableSizes = allSizes.filter(taglia => !usedSizes.includes(taglia));
+
+            return availableSizes.map(taglia => ({ label: taglia, value: taglia }));
         } else if (field === 'numero_box') {
             return size.filter(s => s.taglia === row.taglia).map(s => ({ label: s.numero_box, value: s.numero_box }));
         } else if (field === 'quantità') {
@@ -263,15 +274,9 @@ function CreateShipping() {
         }
     };
 
-    // Prevent selection of the same sample in multiple rows
-    const getAvailableSampleOptions = (index) => {
-        const selectedCodes = rows
-            .map((row, i) => i !== index ? row.codice_campione : null)
-            .filter(Boolean);
-
-        return samples
-            .filter(s => !selectedCodes.includes(s.codice))
-            .map(s => ({ label: s.codice, value: s.codice }));
+    // Returns all samples codes
+    const getSampleOptions = () => {
+        return samples.map(s => ({ label: s.codice, value: s.codice }));
     };
 
     return (
@@ -307,7 +312,7 @@ function CreateShipping() {
                                 <tr key={index}>
                                     <td>
                                         <Select
-                                            options={getAvailableSampleOptions(index)}
+                                            options={getSampleOptions()}
                                             value={row.codice_campione ? { label: row.codice_campione, value: row.codice_campione } : null}
                                             onChange={(option) => handleSampleChange(index, option)}
                                             menuPortalTarget={document.body}
@@ -316,7 +321,7 @@ function CreateShipping() {
                                     </td>
                                     <td>
                                         <Select
-                                            options={getFilteredOptions(row, 'taglia')}
+                                            options={getFilteredOptions(row, 'taglia', index)}
                                             value={row.taglia ? { label: row.taglia, value: row.taglia } : null}
                                             onChange={(option) => handleFieldChange(index, 'taglia', option)}
                                             isDisabled={!row.codice_campione}
@@ -326,7 +331,7 @@ function CreateShipping() {
                                     </td>
                                     <td>
                                         <Select
-                                            options={getFilteredOptions(row, 'numero_box')}
+                                            options={getFilteredOptions(row, 'numero_box', index)}
                                             value={row.numero_box ? { label: row.numero_box, value: row.numero_box } : null}
                                             onChange={(option) => handleFieldChange(index, 'numero_box', option)}
                                             isDisabled={!row.taglia}
@@ -336,7 +341,7 @@ function CreateShipping() {
                                     </td>
                                     <td>
                                         <Select
-                                            options={getFilteredOptions(row, 'quantità')}
+                                            options={getFilteredOptions(row, 'quantità', index)}
                                             value={row.quantità ? { label: row.quantità, value: row.quantità } : null}
                                             onChange={(option) => handleFieldChange(index, 'quantità', option)}
                                             isDisabled={!row.numero_box}

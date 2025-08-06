@@ -36,6 +36,8 @@ function SampleDetail() {
   const [sizes, setSizes] = useState([]); // List of sizes associated with the current sample
   const [editIndex, setEditIndex] = useState(null); // Index of the size row currently being edited
   const [editData, setEditData] = useState(null);  // Editable data for the selected row
+  const [allBoxes, setAllBoxes] = useState([]); // List of all boxes
+  const [existingBoxSelected, setExistingBoxSelected] = useState(false)
 
   // Form state for adding a new size
   const [form, setForm] = useState({
@@ -52,7 +54,6 @@ function SampleDetail() {
   const [editCode, setEditCode] = useState(''); // Controlled input for editing sample code
   const [codeError, setCodeError] = useState(''); // Error message related to new code validation
   const [feedbackDescrizione, setFeedbackDescrizione] = useState(null); // Feedback for description update operation
-  const uniqueBoxOptions = Array.from(new Set(sizes.map(s => s.numero_box))).map(box => ({ label: box, value: box })); // Unique box options for the CreatableSelect component
   const normalized = (str) => str?.toLowerCase().trim() || ''; // Utility to normalize strings for comparison (case-insensitive, trimmed)
 
   // Loads all sizes associated with the current sample
@@ -163,6 +164,7 @@ function SampleDetail() {
         ripiano: ''
       });
     }
+    setExistingBoxSelected(false);
     setScaffaleSelezionato(null);
     loadSizes();
 
@@ -212,7 +214,7 @@ function SampleDetail() {
     }
   };
 
-  // Initial data loading: sample, sizes and shelves
+  // Initial data loading: sample, sizes, shelves and boxes
   useEffect(() => {
     // Fetch sample data
     fetch(`/api/campioni/${codice}`, { credentials: 'include' })
@@ -234,6 +236,20 @@ function SampleDetail() {
         setScaffali(data);
       });
 
+    fetch('/api/sample-sizes/boxes/all', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        const boxOptions = data.map(box => ({
+          label: box.numero_box,
+          value: box.numero_box,
+          id_scaffale: box.id_scaffale,
+          sezione: box.sezione,
+          ripiano: box.ripiano
+        }));
+        setAllBoxes(boxOptions);
+      });
+
+
     // Fetch sample sizes
     loadSizes();
   }, [codice, loadSizes]);
@@ -252,6 +268,24 @@ function SampleDetail() {
       if (newSize.codice_campione === codice) {
         setSizes(prev => [...prev, newSize]);
       }
+
+      setAllBoxes(prev => {
+        const alreadyExists = prev.some(
+          b => b.value === newSize.numero_box
+        );
+        if (alreadyExists) return prev;
+
+        return [
+          ...prev,
+          {
+            label: newSize.numero_box,
+            value: newSize.numero_box,
+            id_scaffale: newSize.id_scaffale,
+            sezione: newSize.sezione,
+            ripiano: newSize.ripiano
+          }
+        ];
+      });
     };
 
     const handleUpdated = (updatedSizes) => {
@@ -266,7 +300,6 @@ function SampleDetail() {
       if (!payload || typeof payload.id_taglia === 'undefined') return;
       setSizes(prev => prev.filter(s => s.id_taglia !== payload.id_taglia));
     };
-
 
     socket.on('size-added', handleAdded);
     socket.on('size-updated', handleUpdated);
@@ -387,11 +420,11 @@ function SampleDetail() {
                 <CreatableSelect
                   className="react-select-container"
                   classNamePrefix="react-select"
-                  options={uniqueBoxOptions}
+                  options={allBoxes}
                   value={form.numero_box ? { label: form.numero_box, value: form.numero_box } : null}
                   onChange={(selected) => {
                     const value = selected?.value || '';
-                    const match = sizes.find(s => normalized(s.numero_box) === normalized(value));
+                    const match = allBoxes.find(s => s.value === value);
                     const scaffale = match && scaffali.find(s => s.id_scaffale === match.id_scaffale);
 
                     setForm(prev => ({
@@ -401,7 +434,9 @@ function SampleDetail() {
                       sezione: match?.sezione || '',
                       ripiano: match?.ripiano || ''
                     }));
+
                     setScaffaleSelezionato(scaffale || null);
+                    setExistingBoxSelected(!!match); // true se match trovato, altrimenti false
                   }}
                   onCreateOption={(inputValue) => {
                     setForm(prev => ({ ...prev, numero_box: inputValue }));
@@ -447,7 +482,7 @@ function SampleDetail() {
                     setScaffaleSelezionato(scaffale);
                   }}
                   options={scaffali.map(s => ({ label: s.id_scaffale, value: s.id_scaffale }))}
-                  isDisabled={sizes.some(s => normalized(s.numero_box) === normalized(form.numero_box))}
+                  isDisabled={existingBoxSelected}
                   placeholder="Seleziona scaffale"
                   menuPortalTarget={document.body}
                   menuPosition="fixed"
@@ -464,7 +499,7 @@ function SampleDetail() {
                       options={Array.from({ length: scaffaleSelezionato.numero_sezioni }, (_, i) => ({
                         label: `${i + 1}`, value: `${i + 1}`
                       }))}
-                      isDisabled={sizes.some(s => normalized(s.numero_box) === normalized(form.numero_box))}
+                      isDisabled={existingBoxSelected}
                       placeholder="Seleziona sezione"
                       menuPortalTarget={document.body}
                       menuPosition="fixed"
@@ -479,7 +514,7 @@ function SampleDetail() {
                       options={Array.from({ length: scaffaleSelezionato.numero_ripiani }, (_, i) => ({
                         label: `${i + 1}`, value: `${i + 1}`
                       }))}
-                      isDisabled={sizes.some(s => normalized(s.numero_box) === normalized(form.numero_box))}
+                      isDisabled={existingBoxSelected}
                       placeholder="Seleziona ripiano"
                       menuPortalTarget={document.body}
                       menuPosition="fixed"
@@ -552,9 +587,20 @@ function SampleDetail() {
                                           backgroundColor: boxes ? 'lightgreen' : 'white',
                                           fontSize: '0.75rem',
                                           padding: '2px',
+                                          textAlign: 'center',
+                                          cursor: boxes ? 'pointer' : 'default'
+                                        }}
+                                        onClick={() => {
+                                          if (boxes) {
+                                            alert(`Box presenti:\n\n${Array.from(boxes).join('\n')}`);
+                                          }
                                         }}
                                       >
-                                        {boxes ? Array.from(boxes).join(', ') : ''}
+                                        {boxes ? (
+                                          <span style={{ textDecoration: 'underline', color: '#0055aa' }}>
+                                            Box presenti
+                                          </span>
+                                        ) : null}
                                       </td>
                                     );
                                   })}
