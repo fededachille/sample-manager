@@ -6,7 +6,6 @@ import { io } from 'socket.io-client';
  * - Sends cookies (for session auth) using `withCredentials: true`
  */
 
-
 const serverUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
 const socket = io(serverUrl, {

@@ -46,15 +46,22 @@ node setupDB.js
 assicurandosi che il server MySQL sia stato avviato.
 Verrà creato un primo utente con nome = "admin", password = "admin" e autorizzazioni = "admin".
 
-### 3. Creare il file `.env` nella cartella `server`
+### 3. Creare i file .env nella cartella server e nella cartella client
 
+**Server:**
 Assegnare i valori appropriati alle variabili, lasciando però inalterato il campo DB_NAME.
 
 DB_HOST=ip_host<br>
 DB_USER=mysql_username<br>
 DB_PASSWORD=mysql_password<br>
 DB_NAME=sample_manager_db<br>
-SESSION_SECRET=stringa_segreta_per_sessioni
+SESSION_SECRET=stringa_segreta_per_sessioni<br>
+CLIENT_ORIGIN=http://ip_host:3000<br>
+
+**Client:**
+Assegnare il valore appropriato alla variabile.
+
+REACT_APP_BACKEND_URL=http://ip_host:5000
 
 ### 4. Installare le dipendenze
 
@@ -80,14 +87,7 @@ cd client
 npm start
 ```
 
-L'app sarà disponibile su `http://localhost:3000`.
-
-## Note
-
-* Le immagini dei campioni vengono salvate nella cartella `server/images`
-* Un'immagine di default viene mostrata per i campioni senza immagine personalizzata (_missing_image.png)
-* Gli utenti admin possono creare utenti, gestire ruoli e reimpostare password
-* Le operazioni eseguite da un utente vengono sincronizzate in tempo reale con gli altri connessi
+L'app sarà disponibile su http://localhost:3000, oppure su http://ip_host:3000 se usata da un diverso host sulla stessa rete.
 
 ## Autore
 
