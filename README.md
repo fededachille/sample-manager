@@ -37,14 +37,13 @@ git clone https://github.com/fededachille/sample-manager.git
 cd sample-manager
 ```
 
-### 2. Configurare il database
+### 2. Installare le dipendenze
 
-Per configurare il database è sufficiente eseguire lo script setupDB.js presente nella cartella server/setup, tramite il comando:
+Eseguire il comando:
 ```bash
-node setupDB.js
+npm install
 ```
-assicurandosi che il server MySQL sia stato avviato.
-Verrà creato un primo utente con nome = "admin", password = "admin" e autorizzazioni = "admin".
+sia in /server che in /client.
 
 ### 3. Creare i file .env nella cartella server e nella cartella client
 
@@ -63,13 +62,15 @@ Assegnare il valore appropriato alla variabile.
 
 REACT_APP_BACKEND_URL=http://ip_host:5000
 
-### 4. Installare le dipendenze
 
-Eseguire il comando:
+### 4. Configurare il database
+
+Per configurare il database è sufficiente eseguire lo script setupDB.js presente nella cartella server/setup, tramite il comando:
 ```bash
-npm install
+node setupDB.js
 ```
-sia in /server che in /client.
+assicurandosi che il server MySQL sia stato avviato.
+Verrà creato un primo utente con nome = "admin", password = "admin" e autorizzazioni = "admin".
 
 ### 5. Avviare il server e il client
 
