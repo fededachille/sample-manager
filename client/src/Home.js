@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import socket from './socket';
 import './css/Home.css';
+import Fuse from 'fuse.js';
 
 /**
  * Home component
  * - Displays all samples (campioni) from the backend
  * - Supports real-time updates via socket (add, update, delete)
- * - Includes a search bar to filter samples by code or description
+ * - Includes a search bar to filter samples by code or description (fuzzy with Fuse.js)
  */
 
 function Home({ user }) {
@@ -27,6 +28,15 @@ function Home({ user }) {
   const [campioni, setCampioni] = useState([]); // List of samples
   const [loading, setLoading] = useState(true); // Initial loading state
   const [searchTerm, setSearchTerm] = useState(''); // Search input state
+
+  // Build Fuse index whenever 'campioni' changes
+  const fuse = useMemo(() => new Fuse(campioni, {
+    keys: ['codice', 'descrizione'],
+    threshold: 0.35,
+    ignoreLocation: true,
+    includeScore: true,
+    minMatchCharLength: 2,
+  }), [campioni]);
 
   // Fetch samples and set up socket listeners on mount
   useEffect(() => {
@@ -72,23 +82,15 @@ function Home({ user }) {
     };
   }, []);
 
-  // Function to check if a sample matches the search term
-  const matchesSearch = (campione) => {
-    const term = searchTerm.toLowerCase();
-    return (
-      campione.codice.toLowerCase().includes(term) ||
-      (campione.descrizione && campione.descrizione.toLowerCase().includes(term))
-    );
-  };
-
-  // Samples that match the search query
-  const matchingCampioni = searchTerm
-    ? campioni.filter(matchesSearch)
+  // Fuzzy search results on top, non-matching below (for visual separation)
+  const hasQuery = searchTerm.trim().length > 0;
+  const matchingCampioni = hasQuery
+    ? fuse.search(searchTerm).map(r => r.item)
     : campioni;
 
-  // Samples that don't match (used for visual separation)
-  const nonMatchingCampioni = searchTerm
-    ? campioni.filter(c => !matchesSearch(c))
+  const matchedSet = new Set(matchingCampioni.map(c => c.codice));
+  const nonMatchingCampioni = hasQuery
+    ? campioni.filter(c => !matchedSet.has(c.codice))
     : [];
 
   // Renders a single sample card (with fallback image)
@@ -139,17 +141,17 @@ function Home({ user }) {
       <div className='sample-grid-wrapper'>
         <div className='sample-grid'>
           {/* No matches found */}
-          {searchTerm && matchingCampioni.length === 0 && (
+          {hasQuery && matchingCampioni.length === 0 && (
             <div className='empty-message'>
               <p>Nessun campione corrisponde alla ricerca.</p>
             </div>
           )}
 
-          {/* Matching samples */}
+          {/* Matching samples (ranked by Fuse) */}
           {matchingCampioni.map(renderCampione)}
 
-          {/* Separator for non-matching samples (optional visual aid) */}
-          {searchTerm && nonMatchingCampioni.length > 0 && (
+          {/* Separator + non-matching (visual grouping) */}
+          {hasQuery && nonMatchingCampioni.length > 0 && (
             <>
               <hr className='results-separator' />
               {nonMatchingCampioni.map(renderCampione)}
@@ -157,7 +159,7 @@ function Home({ user }) {
           )}
 
           {/* No samples at all */}
-          {!searchTerm && campioni.length === 0 && (
+          {!hasQuery && campioni.length === 0 && (
             <div className='empty-message'>
               <p>Sembra che non ci sia ancora nessun campione salvato.</p>
               <Link to="/add-sample">
