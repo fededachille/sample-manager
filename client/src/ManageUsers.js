@@ -232,7 +232,7 @@ function ManageUsers() {
 
                 {/* Feedback message */}
                 {message && (
-                    <p style={{ color: message.success ? 'green' : 'red', marginTop: '1rem' }}>
+                    <p style={{ color: message.success ? 'green' : 'red', marginTop: '1rem', textAlign: 'center' }}>
                         {message.text}
                     </p>
                 )}
