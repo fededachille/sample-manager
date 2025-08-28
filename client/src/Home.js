@@ -32,7 +32,7 @@ function Home({ user }) {
   // Build Fuse index whenever 'campioni' changes
   const fuse = useMemo(() => new Fuse(campioni, {
     keys: ['codice', 'descrizione'],
-    threshold: 0.35,
+    threshold: 0.1,
     ignoreLocation: true,
     includeScore: true,
     minMatchCharLength: 2,
